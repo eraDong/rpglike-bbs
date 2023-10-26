@@ -10,13 +10,17 @@ const isLogin = ref(false)
 
 <template>
   <el-container class="wrapper">
+    <el-backtop class="backtop" :right="100" :bottom="100" />
+
     <el-header class="header">
+      <!-- logo and logo-text -->
       <div class="logo">
         <a href="#">
           <img class="logo-img" src="@/assets/logo/logo.png" alt="" />
           <img class="logo-text" src="@/assets/logo/text.png" alt="" />
         </a>
       </div>
+      <!-- search-bar -->
       <div class="search-bar">
         <span class="bar"
           ><el-input
@@ -36,7 +40,10 @@ const isLogin = ref(false)
 
     <el-container>
       <el-aside class="side">
-        <ul class="jmp-icon">
+        <!-- 返回头顶 -->
+
+        <!-- pop-plate -->
+        <ul class="pop-plate">
           <li>
             <router-link to="/post/popular"
               ><el-icon><Opportunity /></el-icon
@@ -49,6 +56,34 @@ const isLogin = ref(false)
             </router-link>
           </li>
         </ul>
+        <div class="under-line-icons"></div>
+
+        <div class="topic">
+          <el-menu
+            default-active="2"
+            router="true"
+            :background-color="'transparent'"
+            :text-color="'#fff'"
+          >
+            <el-sub-menu index="1">
+              <template #title>
+                <span class="title">Topic</span>
+              </template>
+              <el-menu-item-group title="Gaming">
+                <el-menu-item index="/topic/valorant">Valorant</el-menu-item>
+                <el-menu-item index="/topic/counterstrike"
+                  >Counter-Strike</el-menu-item
+                >
+              </el-menu-item-group>
+              <el-menu-item-group title="Sports">
+                <el-menu-item index="/topic/football">Football</el-menu-item>
+                <el-menu-item index="/topic/basketball"
+                  >Basketball</el-menu-item
+                >
+              </el-menu-item-group>
+            </el-sub-menu>
+          </el-menu>
+        </div>
       </el-aside>
 
       <el-main class="main"><router-view></router-view></el-main>
@@ -57,9 +92,18 @@ const isLogin = ref(false)
 </template>
 
 <style lang="less" scoped>
+.under-line-icons {
+  margin-left: 30px;
+  border-bottom: 1px solid #242c2e;
+}
 .wrapper {
   background-color: #0b1416;
   height: 1980px;
+
+  .backtop {
+    background-color: #242c2e;
+    color: #fff;
+  }
 
   .header {
     display: flex;
@@ -69,6 +113,7 @@ const isLogin = ref(false)
     margin: 0 30px;
     padding: 0 8px;
     background-color: #0b1416;
+    z-index: 100;
 
     width: 96%;
     height: 56px;
@@ -126,7 +171,9 @@ const isLogin = ref(false)
 
   .side {
     position: fixed;
+    margin-left: 100px;
     margin-top: 56px;
+    z-index: 100;
 
     border-right: 1px solid #242c2e;
 
@@ -134,34 +181,58 @@ const isLogin = ref(false)
 
     background-color: #0b1416;
     height: 870px;
-    .jmp-icon {
-      margin-left: 150px;
+    .pop-plate {
+      margin-left: 135px;
       text-align: center;
 
       li {
-        position: relative;
-        padding-bottom: 5px;
+        margin-top: 10px;
         width: 150px;
-
-        .el-icon {
-          font-size: 25px;
-          margin-top: 15px;
-        }
+        position: relative;
         .text {
           position: absolute;
           top: 50%;
-          transform: translateY(-30%);
+          transform: translate(0, -35%);
+        }
+
+        .el-icon {
+          font-size: 25px;
+          margin-top: 10px;
         }
 
         a {
           color: #fff;
           //   cursor: pointer;
         }
-      }
 
-      li:hover {
-        background-color: #242c2e;
-        border-radius: 15px;
+        .router-link-active {
+          display: inline-block;
+          width: 150px;
+          height: 40px;
+          background-color: #242c2e;
+          border-radius: 15px;
+        }
+        &:hover {
+          background-color: #242c2e;
+          border-radius: 15px;
+        }
+        &:last-child {
+          margin-bottom: 10px;
+        }
+      }
+    }
+
+    .topic {
+      margin-left: 135px;
+      margin-top: 10px;
+
+      .title {
+        color: #888c8d;
+        font-weight: 400;
+        font-size: 16px;
+      }
+      .el-menu {
+        border-right: 0 !important;
       }
     }
   }
