@@ -58,7 +58,7 @@ const onCreate = () => {}
   display: flex;
   justify-content: space-between;
   margin-bottom: 30px;
-  margin-left: 100px;
+  margin-left: 165px;
   width: 750px;
 
   .create {

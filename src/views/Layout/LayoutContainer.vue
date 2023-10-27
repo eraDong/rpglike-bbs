@@ -86,7 +86,9 @@ const isLogin = ref(false)
         </div>
       </el-aside>
 
-      <el-main class="main"><router-view></router-view></el-main>
+      <el-main class="main">
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -98,7 +100,9 @@ const isLogin = ref(false)
 }
 .wrapper {
   background-color: #0b1416;
-  height: 1980px;
+  width: 100%;
+  min-height: 1080px;
+  height: 100%;
 
   .backtop {
     background-color: #242c2e;

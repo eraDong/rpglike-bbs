@@ -18,6 +18,7 @@ const imgArr = ref([
       </el-carousel-item>
     </el-carousel>
   </div>
+
   <User-Post></User-Post>
 </template>
 
