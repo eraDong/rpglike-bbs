@@ -1,9 +1,5 @@
 <script setup>
-import { ref } from 'vue'
-
-import { Search, Opportunity, Location } from '@element-plus/icons-vue'
-const search = ref('')
-const isLogin = ref(false)
+import { Opportunity, Location, Message } from '@element-plus/icons-vue'
 
 // 导航被选中时 呈现激活状态
 </script>
@@ -12,38 +8,14 @@ const isLogin = ref(false)
   <el-container class="wrapper">
     <el-backtop class="backtop" :right="100" :bottom="100" />
 
-    <el-header class="header">
-      <!-- logo and logo-text -->
-      <div class="logo">
-        <a href="#">
-          <img class="logo-img" src="@/assets/logo/logo.png" alt="" />
-          <img class="logo-text" src="@/assets/logo/text.png" alt="" />
-        </a>
-      </div>
-      <!-- search-bar -->
-      <div class="search-bar">
-        <span class="bar"
-          ><el-input
-            v-model="search"
-            placeholder="Search"
-            class="header-input"
-            :prefix-icon="Search"
-          ></el-input>
-        </span>
-      </div>
-      <!-- login这需要写一个逻辑 有token的时候显示用户名 无token的时候显示login -->
-      <div class="login">
-        <router-link to="/login" v-if="isLogin === false">Log In</router-link>
-        <router-link to="/user" v-else>Info</router-link>
-      </div>
-    </el-header>
+    <Nav-Header></Nav-Header>
 
     <el-container>
       <el-aside class="side">
         <!-- 返回头顶 -->
 
         <!-- pop-plate -->
-        <ul class="pop-plate">
+        <ul class="icon-shine">
           <li>
             <router-link to="/post/popular"
               ><el-icon><Opportunity /></el-icon
@@ -84,6 +56,20 @@ const isLogin = ref(false)
             </el-sub-menu>
           </el-menu>
         </div>
+        <div class="under-line-icons"></div>
+
+        <div class="contact">
+          <div class="icon-shine">
+            <ul>
+              <li>
+                <router-link to="/contact">
+                  <el-icon><Message /></el-icon>
+                  <span class="text"> Contact</span>
+                </router-link>
+              </li>
+            </ul>
+          </div>
+        </div>
       </el-aside>
 
       <el-main class="main">
@@ -109,70 +95,6 @@ const isLogin = ref(false)
     color: #fff;
   }
 
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: fixed;
-    margin: 0 30px;
-    padding: 0 8px;
-    background-color: #0b1416;
-    z-index: 100;
-
-    width: 96%;
-    height: 56px;
-
-    // background-color: pink;
-
-    border-bottom: 1px solid #242c2e;
-
-    .logo {
-      margin-left: 15px;
-
-      .logo-img {
-        margin-right: 7px;
-        height: 32px;
-        width: 32px;
-
-        border-radius: 50%;
-      }
-
-      .logo-text {
-        height: 17px;
-        width: 60px;
-        margin-bottom: 7px;
-      }
-    }
-    .search-bar {
-      display: flex;
-      .bar {
-        :deep(.el-input__wrapper) {
-          width: 756px;
-          height: 40px;
-          background-color: #1a282d;
-          box-shadow: none;
-          border-radius: 20px;
-        }
-        :deep(.el-input__inner) {
-          color: #fff;
-        }
-      }
-    }
-    .login {
-      margin-right: 45px;
-      height: 40px;
-      width: 66px;
-      border-radius: 20px;
-      line-height: 40px;
-      text-align: center;
-      font-weight: 700;
-      background-color: #d93a00;
-      a {
-        color: #fff;
-      }
-    }
-  }
-
   .side {
     position: fixed;
     margin-left: 100px;
@@ -185,7 +107,7 @@ const isLogin = ref(false)
 
     background-color: #0b1416;
     height: 870px;
-    .pop-plate {
+    .icon-shine {
       margin-left: 135px;
       text-align: center;
 
@@ -229,6 +151,7 @@ const isLogin = ref(false)
     .topic {
       margin-left: 135px;
       margin-top: 10px;
+      margin-bottom: 10px;
 
       .title {
         color: #888c8d;
