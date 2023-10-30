@@ -8,8 +8,6 @@ import { Opportunity, Location, Message } from '@element-plus/icons-vue'
   <el-container class="wrapper">
     <el-backtop class="backtop" :right="100" :bottom="100" />
 
-    <Nav-Header></Nav-Header>
-
     <el-container>
       <el-aside class="side">
         <!-- 返回头顶 -->

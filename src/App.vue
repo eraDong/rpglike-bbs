@@ -1,7 +1,9 @@
 <script setup></script>
 
 <template>
+  <Nav-Header></Nav-Header>
   <router-view></router-view>
 </template>
 
-<style scoped></style>
+<!-- 全局样式 -->
+<style lang="less"></style>

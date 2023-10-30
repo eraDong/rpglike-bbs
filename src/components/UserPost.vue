@@ -43,16 +43,6 @@ const onCreate = () => {}
   </div>
 </template>
 
-<style lang="less">
-// 独立出来修改dropdown样式
-/* 全局化dropdown样式 */
-.drop-menu,
-.el-select-dropdown {
-  background-color: #0b1416;
-  border: none;
-}
-</style>
-
 <style lang="less" scoped>
 .header {
   display: flex;

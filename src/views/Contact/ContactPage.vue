@@ -2,8 +2,6 @@
 
 <template>
   <div class="wrapper">
-    <Nav-Header></Nav-Header>
-
     <div class="content">
       <div class="title">Contact us</div>
 

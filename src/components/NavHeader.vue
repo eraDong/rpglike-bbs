@@ -1,9 +1,15 @@
 <script setup>
 import { ref } from 'vue'
-
 import { Search } from '@element-plus/icons-vue'
+import LoginDialog from './LoginDialog.vue'
+
+const Logindialog = ref(null)
 const search = ref('')
 const isLogin = ref(false)
+
+const onLogin = () => {
+  Logindialog.value.open()
+}
 
 // 导航被选中时 呈现激活状态
 </script>
@@ -30,10 +36,14 @@ const isLogin = ref(false)
     </div>
     <!-- login这需要写一个逻辑 有token的时候显示用户名 无token的时候显示login -->
     <div class="login">
-      <router-link to="/login" v-if="isLogin === false">Log In</router-link>
-      <router-link to="/user" v-else>Info</router-link>
+      <!-- <router-link to="/login" v-if="isLogin === false">Log In</router-link>
+      <router-link to="/user" v-else>Info</router-link> -->
+      <el-button type="text" @click="onLogin" v-if="isLogin === false"
+        >Log In</el-button
+      >
     </div>
   </el-header>
+  <Login-Dialog ref="Logindialog"></Login-Dialog>
 </template>
 
 <style lang="less" scoped>
@@ -95,7 +105,17 @@ const isLogin = ref(false)
     text-align: center;
     font-weight: 700;
     background-color: #d93a00;
-    a {
+    .el-button {
+      --el-button-bg-color: none;
+      --el-button-text-color: #fff;
+      --el-button-hover-bg-color: none;
+      --el-button-font-weight: none;
+      &:hover {
+        color: #b6b5b5;
+      }
+    }
+
+    .el-button--text {
       color: #fff;
     }
   }
