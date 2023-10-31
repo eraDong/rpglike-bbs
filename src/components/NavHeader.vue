@@ -1,14 +1,27 @@
 <script setup>
 import { ref } from 'vue'
 import { Search } from '@element-plus/icons-vue'
+import { useUserStore } from '@/stores'
 import LoginDialog from './LoginDialog.vue'
 
+// 变量
 const Logindialog = ref(null)
+const userStore = useUserStore()
 const search = ref('')
-const isLogin = ref(false)
+
+// 方法
+// 子传父告诉已经登陆
+const isLogined = (e) => {
+  userStore.setLogin(e)
+}
 
 const onLogin = () => {
   Logindialog.value.open()
+}
+
+const exit = () => {
+  userStore.removeToken()
+  userStore.removeLogin()
 }
 
 // 导航被选中时 呈现激活状态
@@ -35,15 +48,21 @@ const onLogin = () => {
       </span>
     </div>
     <!-- login这需要写一个逻辑 有token的时候显示用户名 无token的时候显示login -->
-    <div class="login">
+    <div class="login" v-if="userStore.isLogin === false">
       <!-- <router-link to="/login" v-if="isLogin === false">Log In</router-link>
       <router-link to="/user" v-else>Info</router-link> -->
-      <el-button type="text" @click="onLogin" v-if="isLogin === false"
-        >Log In</el-button
-      >
+      <el-button link @click="onLogin">Log In</el-button>
+    </div>
+    <div class="logined" v-else>
+      <div class="userInfo">
+        <router-link to="/user"
+          ><img src="@/assets/test1.png" alt=""
+        /></router-link>
+      </div>
+      <el-button link @click="exit">Exit</el-button>
     </div>
   </el-header>
-  <Login-Dialog ref="Logindialog"></Login-Dialog>
+  <Login-Dialog ref="Logindialog" @isLogined="isLogined"></Login-Dialog>
 </template>
 
 <style lang="less" scoped>
@@ -117,6 +136,23 @@ const onLogin = () => {
 
     .el-button--text {
       color: #fff;
+    }
+  }
+
+  .logined {
+    display: flex;
+    .userInfo {
+      margin: 5px;
+      background-color: #d93a00;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+
+      img {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+      }
     }
   }
 }

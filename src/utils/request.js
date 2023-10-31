@@ -1,11 +1,17 @@
 import axios from 'axios'
+import { ElMessage } from 'element-plus'
 
-const baseURL = 'http://big-event-vue-api-t.itheima.net'
+// import { ElMessage } from 'element-plus'
+
+const baseURL = 'http://localhost:8081'
 
 const instance = axios.create({
   // TODO 1. 基础地址，超时时间
+  baseURL,
+  timeout: 10000
 })
 
+// 请求前的拦截器 有无Token之类的
 instance.interceptors.request.use(
   (config) => {
     // TODO 2. 携带token
@@ -14,14 +20,16 @@ instance.interceptors.request.use(
   (err) => Promise.reject(err)
 )
 
+// 响应后的拦截器
 instance.interceptors.response.use(
   (res) => {
-    // TODO 3. 处理业务失败
-    // TODO 4. 摘取核心响应数据
-    return res
+    // 请求成功
+
+    return res.data
   },
   (err) => {
-    // TODO 5. 处理401错误
+    // TODO 5. 处理400错误
+    ElMessage.error(err.response.data.message || '服务异常')
     return Promise.reject(err)
   }
 )
