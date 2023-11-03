@@ -1,7 +1,27 @@
 <script setup>
 import { Opportunity, Location, Message } from '@element-plus/icons-vue'
+import { ref } from 'vue'
+import { topicRenderService } from '@/api/topic'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 // 导航被选中时 呈现激活状态
+
+const topicArr = ref([])
+
+const topicRender = async () => {
+  topicArr.value = await topicRenderService()
+}
+topicRender()
+
+const toTopic = (item) => {
+  router.push({
+    path: '/topic',
+    query: {
+      name: item.name
+    }
+  })
+}
 </script>
 
 <template>
@@ -39,17 +59,13 @@ import { Opportunity, Location, Message } from '@element-plus/icons-vue'
               <template #title>
                 <span class="title">Topic</span>
               </template>
-              <el-menu-item-group title="Gaming">
-                <el-menu-item index="/topic/valorant">Valorant</el-menu-item>
-                <el-menu-item index="/topic/counterstrike"
-                  >Counter-Strike</el-menu-item
-                >
-              </el-menu-item-group>
-              <el-menu-item-group title="Sports">
-                <el-menu-item index="/topic/football">Football</el-menu-item>
-                <el-menu-item index="/topic/basketball"
-                  >Basketball</el-menu-item
-                >
+              <el-menu-item-group>
+                <el-menu-item
+                  @click="toTopic(item)"
+                  v-for="item in topicArr"
+                  :key="item.id"
+                  >{{ item.name }}
+                </el-menu-item>
               </el-menu-item-group>
             </el-sub-menu>
           </el-menu>

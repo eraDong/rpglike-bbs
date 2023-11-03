@@ -1,5 +1,17 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+
+
+// 配置存储位置和文件名
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/'); // 上传的文件保存在public目录中
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
 
 const { Sequelize, DataTypes } = require('sequelize');
 
@@ -30,28 +42,44 @@ const Plate = sequelize.define('Plate', {
 // Synchronize the model with the database
 sequelize.sync();
 
-// Create a new plate
-router.post('/create', async (req, res) => {
-    try {
-      const { name, avatar } = req.body;
-      const plate = await Plate.create({ name, avatar });
-      res.json(plate);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Error creating plate' });
-    }
-  });
+const upload = multer({ storage });
+
+router.post('/create', upload.single('avatar'), (req, res) => {
+  try {
+    const { name } = req.body;
+    const avatarPath = req.file.path; // 获取上传的图像文件路径
+
+    // 插入数据到数据库，存储图像文件路径
+    Plate.create({ name, avatar: avatarPath })
+      .then((plate) => {
+        console.log('Plate created:', plate.toJSON());
+        res.json(plate.toJSON());
+      })
+      .catch((error) => {
+        console.error('Error creating plate:', error);
+        res.status(500).json({ message: 'Error creating plate' });
+      });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error creating plate' });
+  }
+});
+
+
+
 
 // Retrieve all plates
 router.get('/read', async (req, res) => {
   try {
     const plates = await Plate.findAll();
-    res.json(plates);
+    const plateArray = plates.map(plate => plate.toJSON()); // 转换为 JSON 对象并放入数组中
+    res.json(plateArray);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error retrieving plates' });
   }
 });
+
 
 //update
 router.put('/update/:id', async (req, res) => {

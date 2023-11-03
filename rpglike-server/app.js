@@ -6,6 +6,11 @@ const app = express()
 // 解决跨域的中间件
 const cors = require('cors')
 
+const user = require('./routes/user.js')
+const plate = require('./routes/plate.js')
+const topic = require('./routes/topic.js')
+
+
 // 挂载到app上
 app.use(cors())
 
@@ -15,9 +20,11 @@ app.use(express.urlencoded({ extended: false }))
 
 
 // 挂载路由
-app.use('/user', router)
+app.use('/user', user)
 
-app.use('/plate', router)
+app.use('/plate', plate)
+
+app.use('/topic', topic)
 
 // http://localhost:8080/public/images/kitten.jpg 访问静态资源示例
 app.use('/public', express.static('public'))

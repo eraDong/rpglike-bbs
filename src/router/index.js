@@ -15,6 +15,10 @@ const router = createRouter({
         {
           path: '/post/plate',
           component: () => import('@/views/Post/PlatePage.vue')
+        },
+        {
+          path: '/post/platecontent',
+          component: () => import('@/views/Post/PlateContent.vue')
         }
       ]
     },
