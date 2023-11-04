@@ -9,6 +9,7 @@ const cors = require('cors')
 const user = require('./routes/user.js')
 const plate = require('./routes/plate.js')
 const topic = require('./routes/topic.js')
+const post = require('./routes/post.js')
 
 
 // 挂载到app上
@@ -25,6 +26,8 @@ app.use('/user', user)
 app.use('/plate', plate)
 
 app.use('/topic', topic)
+
+app.use('/post',post)
 
 // http://localhost:8080/public/images/kitten.jpg 访问静态资源示例
 app.use('/public', express.static('public'))

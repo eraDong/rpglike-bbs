@@ -19,6 +19,10 @@ const router = createRouter({
         {
           path: '/post/platecontent',
           component: () => import('@/views/Post/PlateContent.vue')
+        },
+        {
+          path: '/post/topic',
+          component: () => import('@/views/Post/TopicPage.vue')
         }
       ]
     },
@@ -40,10 +44,6 @@ const router = createRouter({
     {
       path: '/contact',
       component: () => import('@/views/Contact/ContactPage.vue')
-    },
-    {
-      path: '/topic',
-      component: () => import('@/views/Topic/TopicPage.vue')
     },
     {
       path: '/register',

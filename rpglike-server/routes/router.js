@@ -5,6 +5,7 @@ const express = require('express')
 const user = require('./user.js')
 const plate = require('./plate.js')
 const topic = require('./topic.js')
+const post = require('./post.js')
 // 创建路由对象
 const router = express.Router()
 
@@ -18,6 +19,8 @@ router.use(user)
 router.use(plate)
 
 router.use(topic)
+
+router.use(post)
 
 
 // 向外导出路由对象

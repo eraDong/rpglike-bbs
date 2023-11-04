@@ -1,11 +1,16 @@
 <script setup>
 import {} from '@element-plus/icons-vue'
 import { ref } from 'vue'
-
 // 临时变量名
 const value = ref('')
 const options = ref('')
 const onCreate = () => {}
+
+const props = defineProps({
+  postArr: {
+    required: true
+  }
+})
 </script>
 
 <template>
@@ -37,9 +42,7 @@ const onCreate = () => {}
 
   <div class="main">
     <!-- 批量生产帖子 -->
-    <Post-item></Post-item>
-    <Post-item></Post-item>
-    <Post-item></Post-item>
+    <Post-item v-for="item in props.postArr" :key="item.id"></Post-item>
   </div>
 </template>
 

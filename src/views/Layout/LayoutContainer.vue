@@ -16,7 +16,7 @@ topicRender()
 
 const toTopic = (item) => {
   router.push({
-    path: '/topic',
+    path: '/post/topic',
     query: {
       name: item.name
     }

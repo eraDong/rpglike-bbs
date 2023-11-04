@@ -5,6 +5,7 @@ import {
   CaretTop,
   CaretBottom
 } from '@element-plus/icons-vue'
+
 // 阻止冒泡
 const onPlate = () => {
   console.log('plate')
@@ -15,6 +16,8 @@ const onJoin = () => {
 const onPost = () => {
   console.log('post')
 }
+
+//如果读取到plate就是plate 如果是topic就是topic 如果都没有就是普遍
 </script>
 
 <template>
