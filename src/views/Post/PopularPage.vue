@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import { postRenderService } from '@/api/post'
 
 const imgArr = ref([
   { imgUrl: new URL('@/assets/test1.png', import.meta.url).href },
@@ -7,6 +8,13 @@ const imgArr = ref([
   { imgUrl: new URL('@/assets/test3.png', import.meta.url).href },
   { imgUrl: new URL('@/assets/test4.png', import.meta.url).href }
 ])
+
+const postArr = ref([])
+
+const postRender = async () => {
+  postArr.value = await postRenderService()
+}
+postRender()
 </script>
 
 <template>
@@ -19,7 +27,7 @@ const imgArr = ref([
     </el-carousel>
   </div>
 
-  <User-Post></User-Post>
+  <User-Post :postArr="postArr"></User-Post>
 </template>
 
 <style lang="less" scoped>

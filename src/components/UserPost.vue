@@ -11,6 +11,8 @@ const props = defineProps({
     required: true
   }
 })
+
+// console.log(props.postArr)
 </script>
 
 <template>
@@ -42,7 +44,11 @@ const props = defineProps({
 
   <div class="main">
     <!-- 批量生产帖子 -->
-    <Post-item v-for="item in props.postArr" :key="item.id"></Post-item>
+    <Post-item
+      v-for="item in props.postArr"
+      :key="item"
+      :itemVal="item"
+    ></Post-item>
   </div>
 </template>
 

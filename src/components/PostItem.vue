@@ -17,6 +17,13 @@ const onPost = () => {
   console.log('post')
 }
 
+const props = defineProps({
+  itemVal: {
+    required: true
+  }
+})
+
+// console.log(props.itemVal.likes)
 //如果读取到plate就是plate 如果是topic就是topic 如果都没有就是普遍
 </script>
 
@@ -28,9 +35,11 @@ const onPost = () => {
         <div class="left">
           <div class="plate">
             <span class="plateImg"
-              ><img src="@/assets/test-postimg.png" alt=""
+              ><img :src="`/rpglike-server/${props.itemVal.avatar}`" alt=""
             /></span>
-            <div class="onplate" @click.stop="onPlate">Land of ORC</div>
+            <div class="onplate" @click.stop="onPlate">
+              {{ props.itemVal.plate }}
+            </div>
           </div>
           <div class="join" @click.stop="onJoin">Join</div>
         </div>
@@ -38,10 +47,12 @@ const onPost = () => {
       <!-- 主要内容 -->
       <!-- 图片非必须 -->
       <div class="main">
-        <h3>Lakers vs Nuggets</h3>
-        <span class="postImg"
-          ><img src="@/assets/post-test1.png" alt=""
-        /></span>
+        <h3>{{ props.itemVal.title }}</h3>
+        <span v-if="props.itemVal.image !== null" class="postImg">
+          <img :src="`/rpglike-server/${props.itemVal.image}`" />
+          {{ props.itemVal.content }}
+        </span>
+        <span v-else> {{ props.itemVal.content }} </span>
       </div>
       <!-- 底部点赞内容 -->
       <div class="footer">
@@ -49,7 +60,8 @@ const onPost = () => {
           <div class="like">
             <el-icon><CaretTop /></el-icon>
           </div>
-          <div class="count">Vote</div>
+          <div class="count" v-if="props.itemVal.likes === 0">Vote</div>
+          <div class="count" v-else>{{ props.itemVal.likes }}</div>
           <div class="unlike">
             <el-icon><CaretBottom /></el-icon>
           </div>
@@ -58,7 +70,8 @@ const onPost = () => {
           <div class="comment">
             <el-icon><ChatSquare /></el-icon>
             <!-- 超过999后显示999+防止溢出 -->
-            <div class="count">999+</div>
+            <div class="count" v-if="props.itemVal.comments > 999">999+</div>
+            <div class="count" v-else>{{ props.itemVal.comments }}</div>
           </div>
         </div>
         <div class="btn">
@@ -133,15 +146,15 @@ const onPost = () => {
 
   .main {
     padding: 5px;
+    overflow: hidden;
     h3 {
       font-size: 24px;
     }
     .postImg {
-      width: 720px;
       img {
         margin: 5px 35px;
         width: 650px;
-        height: 100%;
+        height: 275px;
         border-radius: 30px;
       }
     }

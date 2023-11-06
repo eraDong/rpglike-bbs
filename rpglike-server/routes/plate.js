@@ -80,6 +80,24 @@ router.get('/read', async (req, res) => {
   }
 });
 
+// Retrieve a plate by name
+router.get('/readByName/:name', async (req, res) => {
+  try {
+    const { name } = req.params;
+    const plate = await Plate.findOne({ where: { name } });
+
+    if (plate) {
+      res.json(plate.toJSON());
+    } else {
+      res.status(404).json({ message: 'Plate not found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error retrieving plate by name' });
+  }
+});
+
+
 
 //update
 router.put('/update/:id', async (req, res) => {
