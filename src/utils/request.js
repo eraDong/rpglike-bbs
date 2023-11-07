@@ -25,6 +25,7 @@ instance.interceptors.response.use(
   (res) => {
     // 请求成功
 
+    if (res.data.message) ElMessage.success(res.data.message)
     return res.data
   },
   (err) => {

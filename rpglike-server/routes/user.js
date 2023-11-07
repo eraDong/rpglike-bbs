@@ -2,94 +2,115 @@
 const express = require('express')
 const router = express.Router()
 const jwt = require('jsonwebtoken')
-const mysql = require('mysql2')
+
 const bcrypt = require('bcrypt')
 
-// 连接我的数据库
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'root',
-    database: 'rpglike-api',
-})
+const { Sequelize, DataTypes } = require('sequelize');
 
-router.post('/login', (req, res) => {
-  const { username, password } = req.body
+const sequelize = new Sequelize('rpglike-api', 'root', 'root', {
+  host: 'localhost',
+  dialect: 'mysql',
+});
 
-  // 在数据库中查找用户
-  db.query('SELECT * FROM users WHERE username = ?', [username], (err, results) => {
-    if (err) {
-      console.error(err)
-      res.status(500).json({ message: '登录失败' })
-    } else if (results.length === 0) {
-      res.status(401).json({ message: '用户名或密码错误' })
+const User = sequelize.define('User', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  username: {
+    type: DataTypes.STRING,
+    unique: true, // 确保用户名唯一
+  },
+  password: {
+    type: DataTypes.STRING,
+  },
+});
+
+// ...
+sequelize.sync();
+
+// 在此处添加任何其他模型关联
+
+router.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const user = await User.findOne({ where: { username } });
+
+    if (!user) {
+      res.status(401).json({ message: '用户名或密码错误' });
     } else {
-      const user = results[0];
-      
-      // 验证密码哈希
-      bcrypt.compare(password, user.password, (compareErr, isPasswordMatch) => {
-        if (compareErr) {
-          console.error(compareErr)
-          res.status(500).json({ message: '登录失败' })
-        } else if (isPasswordMatch) {
-          // 密码匹配，创建 JWT 令牌
-          const token = jwt.sign({ username: user.username, userId: user.id }, 'your_secret_key', { expiresIn: '1h' })
-          res.status(200).json({ token })
-        } else {
-          res.status(401).json({ message: '用户名或密码错误' })
-        }
-      })
+      const isPasswordMatch = await bcrypt.compare(password, user.password);
+
+      if (isPasswordMatch) {
+        const token = jwt.sign({ username: user.username, userId: user.id }, 'your_secret_key', {
+          expiresIn: '1h',
+        });
+        res.status(200).json({ token });
+      } else {
+        res.status(401).json({ message: '用户名或密码错误' });
+      }
     }
-  })
-})
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: '登录失败' });
+  }
+});
 
-// 注册路由
-// 注册路由
-// 注册路由
-router.post('/register', (req, res) => {
-  const { username, password, repassword } = req.body
+router.post('/register', async (req, res) => {
+  const { username, password, repassword } = req.body;
 
-  // 检查密码和确认密码是否一致
   if (password !== repassword) {
-    console.error('密码和确认密码不一致')
-    return res.status(400).json({ message: '密码和确认密码不一致' })
+    console.error('密码和确认密码不一致');
+    return res.status(400).json({ message: '密码和确认密码不一致' });
   }
 
-  // 使用 bcrypt 哈希密码
-  bcrypt.hash(password, 10, (hashErr, hashedPassword) => {
-    if (hashErr) {
-      console.error('密码哈希错误:', hashErr);
-      return res.status(500).json({ message: '注册失败' })
+  try {
+    const existingUser = await User.findOne({ where: { username } });
+
+    if (existingUser) {
+      return res.status(400).json({ message: '用户名已存在' });
     }
 
-    // 检查用户名是否已存在
-    db.query('SELECT * FROM users WHERE username = ?', [username], (err, results) => {
-      if (err) {
-        console.error('查询失败:', err)
-        return res.status(500).json({ message: '注册失败' })
-      }
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-      if (results.length > 0) {
-        // 用户名已存在
-        return res.status(400).json({ message: '用户名已存在' })
-      } else {
-        // 用户名不存在，可以插入新用户
-        db.query('INSERT INTO users (username, password) VALUES (?, ?)', [username, hashedPassword], (err, insertResults) => {
-          if (err) {
-            console.error('注册失败:', err)
-            return res.status(500).json({ message: '注册失败' })
-          }
+    const newUser = await User.create({ username, password: hashedPassword });
 
-          if (insertResults.affectedRows === 1) {
-            res.status(201).json({ message: '用户注册成功' })
-          } else {
-            console.error('数据库插入未成功');
-            res.status(500).json({ message: '注册失败' })
-          }
-        })
-      }
-    })
-  })
-})
+    if (newUser) {
+      res.status(201).json({ message: '用户注册成功' });
+    } else {
+      console.error('数据库插入未成功');
+      res.status(500).json({ message: '注册失败' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: '注册失败' });
+  }
+});
+
+// Retrieve a user's ID by username
+router.get('/getUserIdByUsername/:username', async (req, res) => {
+  try {
+    const { username } = req.params;
+
+    const user = await User.findOne({ where: { username } });
+
+    if (user) {
+      res.json({ id: user.id });
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error retrieving user ID by username' });
+  }
+});
+
+
+// 注册路由
+// 注册路由
+// 注册路由
+
 
 module.exports = router

@@ -21,22 +21,58 @@ const sequelize = new Sequelize('rpglike-api', 'root', 'root', {
   dialect: 'mysql', // Use the appropriate dialect
 });
 
-// Define a Plate model
+const User = sequelize.define('User', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  username: {
+    type: DataTypes.STRING,
+    unique: true, // 确保用户名唯一
+  },
+  password: {
+    type: DataTypes.STRING,
+  },
+});
+
 const Plate = sequelize.define('Plate', {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  name: {
+    type: DataTypes.STRING,
+  },
+  avatar: {
+    type: DataTypes.STRING,
+  },
+  // 其他板块属性
+});
+
+const UserPlate = sequelize.define('UserPlate', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  UserId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'users',
+      key: 'id',
     },
-    name: {
-      type: DataTypes.STRING, // Assuming 'name' is a string
+  },
+  PlateId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'plates',
+      key: 'id',
     },
-    avatar: {
-      type: DataTypes.STRING, // Assuming 'avatar' is a string (URL to an image)
-    },
-    // Define other plate attributes
-    // Example: description, etc.
-  });
+  },
+});
+
   
 
 // Synchronize the model with the database
@@ -135,5 +171,49 @@ router.delete('/delete/:id', async (req, res) => {
     res.status(500).json({ message: 'Error deleting plate' });
   }
 });
+
+router.post('/join', async (req, res) => {
+  try {
+    const { userId, plateId } = req.body;
+
+    // 检查是否用户已经加入了该板块
+    const existingUserPlate = await UserPlate.findOne({
+      where: { UserId: userId, PlateId: plateId },
+    });
+
+    if (existingUserPlate) {
+      return res.status(400).json({ message: 'User already joined this plate' });
+    }
+
+    // 创建新的关联关系
+    const newUserPlate = await UserPlate.create({ UserId: userId, PlateId: plateId });
+
+    res.status(201).json({ message: 'Success' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error joining plate' });
+  }
+});
+
+
+// Retrieve a plate's ID by name
+router.get('/getPlateIdByName/:name', async (req, res) => {
+  try {
+    const { name } = req.params;
+
+    const plate = await Plate.findOne({ where: { name } });
+
+    if (plate) {
+      res.json({ id: plate.id });
+    } else {
+      res.status(404).json({ message: 'Plate not found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error retrieving plate ID by name' });
+  }
+});
+
+
 
 module.exports = router;

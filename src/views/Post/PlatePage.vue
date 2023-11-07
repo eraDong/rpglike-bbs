@@ -14,7 +14,7 @@ plateRender()
 
 const toPlate = (item) => {
   const correctedName = item.name.replace(/\s+/g, '')
-  router.push({
+  router.replace({
     path: '/post/platecontent',
     query: {
       name: correctedName

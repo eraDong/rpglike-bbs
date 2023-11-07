@@ -5,6 +5,7 @@ export const useUserStore = defineStore(
   'user',
   () => {
     const token = ref('')
+    const joinedPlate = ref(false)
 
     const setToken = (newToken) => {
       token.value = newToken
@@ -23,13 +24,24 @@ export const useUserStore = defineStore(
       isLogin.value = false
     }
 
+    const setJoinPlate = (e) => {
+      joinedPlate.value = e
+    }
+
+    const removeJoinPlate = () => {
+      joinedPlate.value = false
+    }
+
     return {
       token,
       setToken,
       removeToken,
       isLogin,
       setLogin,
-      removeLogin
+      removeLogin,
+      joinedPlate,
+      removeJoinPlate,
+      setJoinPlate
     }
   },
   {

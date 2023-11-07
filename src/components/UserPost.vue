@@ -4,7 +4,10 @@ import { ref } from 'vue'
 // 临时变量名
 const value = ref('')
 const options = ref('')
-const onCreate = () => {}
+const createDialog = ref(null)
+const onCreate = () => {
+  createDialog.value.open()
+}
 
 const props = defineProps({
   postArr: {
@@ -17,6 +20,8 @@ const props = defineProps({
 
 <template>
   <div class="header">
+    <Create-Dialog ref="createDialog"></Create-Dialog>
+
     <!-- 创建新帖子 -->
     <div class="create">
       <el-button round @click="onCreate">Create a Post</el-button>

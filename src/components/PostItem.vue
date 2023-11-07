@@ -5,13 +5,30 @@ import {
   CaretTop,
   CaretBottom
 } from '@element-plus/icons-vue'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/modules/user'
+import { getPlateIdService, userJoinPlateService } from '@/api/plate'
+import { getUserIdService } from '@/api/user'
+const userStore = useUserStore()
+const router = useRouter()
 
 // 阻止冒泡
-const onPlate = () => {
-  console.log('plate')
+const onPlate = (name) => {
+  router.push({
+    path: '/post/platecontent',
+    query: {
+      name: name
+    }
+  })
 }
-const onJoin = () => {
-  console.log('join')
+const onJoin = async (item) => {
+  console.log(item)
+  const plateId = await getPlateIdService(item.plate)
+  const userId = await getUserIdService(item.author)
+  // console.log(userId.id)
+  // console.log(plateId.id)
+  await userJoinPlateService(plateId.id, userId.id)
+  userStore.joinedPlate = true
 }
 const onPost = () => {
   console.log('post')
@@ -37,11 +54,17 @@ const props = defineProps({
             <span class="plateImg"
               ><img :src="`/rpglike-server/${props.itemVal.avatar}`" alt=""
             /></span>
-            <div class="onplate" @click.stop="onPlate">
+            <div class="onplate" @click.stop="onPlate(props.itemVal.plate)">
               {{ props.itemVal.plate }}
             </div>
           </div>
-          <div class="join" @click.stop="onJoin">Join</div>
+          <div
+            v-if="userStore.joinedPlate === false"
+            class="join"
+            @click.stop="onJoin(itemVal)"
+          >
+            Join
+          </div>
         </div>
       </div>
       <!-- 主要内容 -->

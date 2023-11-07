@@ -5,3 +5,6 @@ export const userRegisterService = ({ username, password, repassword }) =>
 
 export const userLoginService = ({ username, password }) =>
   request.post('/user/login', { username, password })
+
+export const getUserIdService = (username) =>
+  request.get(`/user/getUserIdByUsername/${username}`)
