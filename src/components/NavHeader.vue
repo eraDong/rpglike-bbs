@@ -71,6 +71,8 @@ const exit = () => {
   justify-content: space-between;
   align-items: center;
   position: fixed;
+  top: 0;
+
   margin: 0 30px;
   padding: 0 8px;
   background-color: #0b1416;

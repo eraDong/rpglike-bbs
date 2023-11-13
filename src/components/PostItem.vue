@@ -22,7 +22,6 @@ const onPlate = (name) => {
   })
 }
 const onJoin = async (item) => {
-  console.log(item)
   const plateId = await getPlateIdService(item.plate)
   const userId = await getUserIdService(item.author)
   // console.log(userId.id)
@@ -30,8 +29,14 @@ const onJoin = async (item) => {
   await userJoinPlateService(plateId.id, userId.id)
   userStore.joinedPlate = true
 }
-const onPost = () => {
-  console.log('post')
+const onPost = (item) => {
+  console.log(item)
+  router.replace({
+    path: '/postcontent',
+    query: {
+      id: item.id
+    }
+  })
 }
 
 const props = defineProps({
@@ -46,7 +51,7 @@ const props = defineProps({
 
 <template>
   <div class="content">
-    <div class="router-to-post" @click="onPost">
+    <div class="router-to-post" @click="onPost(itemVal)">
       <!-- 头部导航内容 -->
       <div class="header">
         <div class="left">

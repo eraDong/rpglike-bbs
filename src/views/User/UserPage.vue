@@ -2,7 +2,7 @@
   <div class="wrapper">
     <el-container class="container">
       <!-- header占个位置 -->
-      <el-header></el-header>
+
       <el-container>
         <el-aside width="450px">
           <div class="avatar"><img src="@/assets/test1.png" alt="" /></div>
@@ -25,7 +25,7 @@
 <style lang="less" scoped>
 .wrapper {
   background-color: #0b1416;
-  min-height: 1080px;
+  margin-top: 56px;
   .container {
     .el-aside {
       .avatar {

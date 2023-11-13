@@ -72,8 +72,11 @@ const upload = multer({ storage });
 router.post('/create', upload.fields([{ name: 'avatar' }, { name: 'image' }]), async (req, res) => {
   try {
     const { title, content, author, category, likes, comments, views, plate } = req.body;
-    const avatar = req.files['avatar'][0].path; // 获取上传的 avatar 文件的路径
-    const image = req.files['image'][0].path;   // 获取上传的 image 文件的路径
+    // 检查是否上传了 avatar 文件，如果没有则将 avatar 设置为 null
+    const avatar = req.files['avatar'] ? req.files['avatar'][0].path : null;
+
+    // 检查是否上传了 image 文件，如果没有则将 image 设置为 null
+    const image = req.files['image'] ? req.files['image'][0].path : null;
 
     const post = await Post.create({
       title,
@@ -85,7 +88,7 @@ router.post('/create', upload.fields([{ name: 'avatar' }, { name: 'image' }]), a
       views: views || 0,
       plate: plate || null,
       avatar,
-      image,
+      image:image||null,
     });
 
     res.json(post.toJSON());
@@ -178,5 +181,24 @@ router.delete('/delete/:id', async (req, res) => {
     res.status(500).json({ message: 'Error deleting post' });
   }
 });
+
+// 根据帖子ID读取帖子
+router.get('/readById/:id', async (req, res) => {
+  try {
+    const postId = req.params.id;
+
+    const post = await Post.findByPk(postId);
+
+    if (post) {
+      res.json(post.toJSON());
+    } else {
+      res.status(404).json({ message: 'Post not found' });
+    }
+  } catch (error) {
+    console.error('Error retrieving post by ID:', error);
+    res.status(500).json({ message: 'Error retrieving post by ID' });
+  }
+});
+
 
 module.exports = router;

@@ -7,3 +7,5 @@ export const postRenderTopicService = (topic) =>
 
 export const postRenderPlateService = (Plate) =>
   request.get(`/post/readByPlate/${Plate}`)
+
+export const postRenderIdService = (Id) => request.get(`/post/readById/${Id}`)
